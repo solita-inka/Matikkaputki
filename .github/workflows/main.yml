@@ -5,6 +5,9 @@ on:
 defaults:
   run: 
     working-directory: ./MathWorkshop
+permissions:
+  checks: write
+  pull-requests: write
  
 jobs:
   build:
@@ -21,3 +24,8 @@ jobs:
       name: Build
     - name: Run tests
       run: dotnet test
+    - run: dotnet test --logger "trx;LogFileName=report.trx" --results-directory./test-output
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2.16.1
+      with:
+        files: ./MathWorkshop/test-output/*.trx
